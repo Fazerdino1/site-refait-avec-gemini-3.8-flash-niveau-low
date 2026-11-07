@@ -3,1625 +3,2040 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linear – The product development system for teams and agents</title>
-  <meta name="description" content="Linear is a purpose-built product development system for planning and building products. Designed for the AI era.">
+  <title>Linear – The system for product development</title>
+  <meta name="description" content="Purpose-built for planning and building products with AI agents.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;550;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #08090a;
-      --bg-card: rgba(18, 19, 22, 0.7);
-      --bg-card-subtle: #121316;
-      --bg-card-border: rgba(255, 255, 255, 0.08);
-      --bg-card-border-active: rgba(255, 255, 255, 0.16);
+      --bg-subtle: #0f1011;
+      --bg-card: #121315;
+      --bg-card-inner: #18191c;
+      --bg-glass: rgba(18, 19, 21, 0.7);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: rgba(255, 255, 255, 0.28);
       --text-main: #f7f8f8;
       --text-muted: #8a8f98;
       --text-dim: #62666d;
-      --border: rgba(255, 255, 255, 0.08);
+      --accent: #5e6ad2;
+      --accent-glow: rgba(94, 106, 210, 0.4);
+      --yellow: #f59e0b;
+      --green: #10b981;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --orange: #f97316;
+      --red: #ef4444;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    body {
+    html, body {
       background-color: var(--bg);
       color: var(--text-main);
       font-family: var(--font-sans);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
       line-height: 1.5;
+      font-size: 14px;
+      scroll-behavior: smooth;
     }
 
-    /* Top Navigation */
-    header {
-      position: sticky;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Ambient Lighting and Background Gradient Grids */
+    .bg-lights {
+      position: absolute;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      background-color: rgba(8, 9, 10, 0.75);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      left: 0;
+      right: 0;
+      height: 1400px;
+      background-image: 
+        radial-gradient(ellipse 70% 40% at 50% -10%, rgba(120, 119, 198, 0.18), transparent 70%),
+        radial-gradient(circle at 50% 280px, rgba(94, 106, 210, 0.12), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .nav-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-      font-size: 1.05rem;
-      letter-spacing: -0.01em;
-    }
-
-    .brand svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    nav.nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    nav.nav-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 400;
-      transition: color 0.15s ease;
-    }
-
-    nav.nav-links a:hover {
-      color: var(--text-main);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .nav-divider {
-      width: 1px;
-      height: 14px;
-      background-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-login {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      transition: color 0.15s ease;
-    }
-    .btn-login:hover {
-      color: #fff;
-    }
-
-    .btn-signup {
-      text-decoration: none;
-      background-color: #fff;
-      color: #08090a;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      transition: background-color 0.2s, transform 0.15s;
-    }
-    .btn-signup:hover {
-      background-color: #ececed;
-      transform: scale(1.02);
-    }
-
-    /* Container */
     .container {
       max-width: 1240px;
       margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    /* Hero Section */
-    .hero-section {
-      padding-top: 5.5rem;
-      padding-bottom: 3rem;
+      padding: 0 24px;
       position: relative;
+      z-index: 1;
     }
 
-    .hero-header {
+    /* Announcement Banner */
+    .top-announcement {
       display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 16, 17, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .top-announcement .badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .top-announcement a {
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.15s;
+    }
+    .top-announcement a:hover {
+      text-decoration: underline;
+    }
+
+    /* Site Header */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 9, 10, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 4rem;
+      height: 64px;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 550;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+    .logo svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-menu a {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      transition: color 0.15s;
+    }
+    .nav-menu a:hover {
+      color: var(--text-main);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-right a {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      transition: color 0.15s;
+    }
+    .nav-right a:hover {
+      color: var(--text-main);
+    }
+    .nav-right .divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border-subtle);
+    }
+    .btn-signup {
+      background: #f7f8f8;
+      color: #08090a;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .btn-signup:hover {
+      background: #e2e4e7;
+    }
+
+    /* Hero Section (Faithful to Image 1) */
+    .hero {
+      padding: 96px 0 64px;
       position: relative;
     }
-
-    .hero-content {
-      max-width: 780px;
-    }
-
-    .hero-title {
-      font-size: clamp(2.5rem, 4.8vw, 4.25rem);
-      font-weight: 400;
-      line-height: 1.08;
-      letter-spacing: -0.035em;
-      color: #fff;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1.0625rem;
+    .hero-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      font-size: 12px;
       color: var(--text-muted);
-      font-weight: 400;
-      letter-spacing: -0.01em;
+      margin-bottom: 24px;
     }
-
+    .hero-title {
+      font-size: clamp(40px, 6.2vw, 76px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 500;
+      max-width: 860px;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+    .hero-subtitle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 540px;
+      line-height: 1.45;
+    }
     .hero-badge-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      text-decoration: none;
-      font-size: 0.875rem;
+      gap: 8px;
       color: var(--text-muted);
+      font-size: 13px;
       transition: color 0.15s;
-      white-space: nowrap;
-      margin-bottom: 0.5rem;
     }
     .hero-badge-link:hover {
       color: #fff;
     }
-    .hero-badge-link .pill-new {
-      color: #90949d;
-      margin-right: 2px;
-    }
-    .hero-badge-link .loops-name {
+    .hero-badge-link .pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
       color: #fff;
       font-weight: 500;
     }
 
-    /* Hero App Window Simulation */
-    .app-window-wrapper {
+    /* Hero Mockup: Linear UI (Exact reproduction of Image 1) */
+    .hero-mockup-wrapper {
       position: relative;
-      margin-top: 1rem;
       border-radius: 12px;
-      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06), transparent 60%);
       padding: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 100%);
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8), 0 0 80px -10px rgba(94, 106, 210, 0.16);
     }
-
-    .app-window {
-      background: #0f1013;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
+    .mockup-container {
+      background: #0f1012;
+      border-radius: 11px;
       overflow: hidden;
-      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
       display: grid;
-      grid-template-columns: 220px 1fr;
-      min-height: 580px;
+      grid-template-columns: 240px 1fr;
+      min-height: 600px;
       position: relative;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
-    /* App Sidebar */
-    .app-sidebar {
-      background-color: #0c0d0f;
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 1rem 0.75rem;
-      font-size: 0.8125rem;
+    /* Left Sidebar */
+    .mockup-sidebar {
+      background: #0c0d0e;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 14px 12px;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 18px;
+      font-size: 12.5px;
+      user-select: none;
     }
-
     .sidebar-user {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.25rem 0.5rem;
-      color: #fff;
+      padding: 4px 6px;
+      border-radius: 6px;
+      color: var(--text-main);
       font-weight: 500;
     }
     .sidebar-user-left {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
     }
-
-    .sidebar-nav {
+    .sidebar-user-avatar {
+      width: 18px;
+      height: 18px;
+      background: #2a2b2e;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+    }
+    .sidebar-actions {
+      display: flex;
+      gap: 8px;
+      color: var(--text-dim);
+    }
+    .sidebar-section-title {
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 0 6px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-menu-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
-
-    .sidebar-nav-item {
+    .sidebar-item {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      padding: 0.4rem 0.6rem;
+      gap: 10px;
+      padding: 6px 8px;
       border-radius: 6px;
       color: var(--text-muted);
       cursor: pointer;
-      font-weight: 400;
-      transition: background 0.1s, color 0.1s;
+      transition: background 0.12s, color 0.12s;
     }
-    .sidebar-nav-item:hover, .sidebar-nav-item.active {
+    .sidebar-item:hover, .sidebar-item.active {
       background: rgba(255, 255, 255, 0.05);
-      color: #fff;
+      color: var(--text-main);
+    }
+    .sidebar-item svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
+    }
+    .sidebar-item.active svg {
+      opacity: 1;
+      color: var(--accent);
+    }
+    .sidebar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      display: inline-block;
     }
 
-    .sidebar-section-title {
-      font-size: 0.6875rem;
-      color: var(--text-dim);
-      font-weight: 500;
-      padding: 0 0.6rem 0.3rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    /* App Main Content */
-    .app-main {
-      padding: 1rem 2rem;
+    /* Main Area */
+    .mockup-main {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
       position: relative;
+      background: #0f1012;
     }
-
-    .app-topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .mockup-topbar {
+      height: 44px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 0.75rem;
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-
-    .issue-key {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 0.4rem;
-      color: #f59e0b;
-      font-size: 0.8rem;
-    }
-    .issue-title-bar {
-      color: var(--text-main);
-      font-weight: 500;
-      margin-left: 0.35rem;
-    }
-
-    .app-issue-body {
-      max-width: 620px;
-    }
-
-    .issue-heading {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.02em;
-    }
-
-    .issue-desc {
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 12px;
       color: var(--text-muted);
-      font-size: 0.875rem;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
+    }
+    .topbar-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-badge-id {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--yellow);
+    }
+    .topbar-badge-id .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--yellow);
+      border-radius: 50%;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--text-dim);
     }
 
+    /* Issue detail body */
+    .mockup-body {
+      padding: 26px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 680px;
+    }
+    .issue-title {
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+    .issue-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
     .issue-desc code {
       font-family: var(--font-mono);
-      background: rgba(255, 255, 255, 0.07);
-      padding: 2px 5px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 1px 5px;
       border-radius: 4px;
-      font-size: 0.8125rem;
-      color: #e2e8f0;
+      color: #ddd;
+      font-size: 12px;
     }
-
-    .app-activity-stream {
-      margin-top: 1rem;
+    .activity-section {
+      margin-top: 8px;
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
-      font-size: 0.8125rem;
+      gap: 16px;
     }
-
-    .activity-section-header {
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
+    .activity-heading {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
     }
-
-    .activity-row {
+    .activity-item {
       display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-      color: var(--text-muted);
+      gap: 12px;
+      font-size: 13px;
     }
-
-    .avatar {
+    .activity-avatar {
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: #2a2e37;
+      background: #232529;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
-      color: #fff;
-      flex-shrink: 0;
-    }
-
-    .activity-text strong {
-      color: #f1f2f4;
-      font-weight: 500;
-    }
-
-    .activity-text .meta-time {
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      margin-left: 0.4rem;
-    }
-
-    /* Floating AI Agent Modal inside Window */
-    .agent-dock {
-      position: absolute;
-      bottom: 2rem;
-      right: 2rem;
-      width: 380px;
-      background: #15171c;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      font-size: 0.8125rem;
-    }
-
-    .agent-header {
-      background: #1b1d24;
-      padding: 0.65rem 0.9rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .agent-title-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      color: #fff;
-      font-weight: 500;
-      font-size: 0.8125rem;
-    }
-
-    .agent-status-dot {
-      width: 7px;
-      height: 7px;
-      background: #22c55e;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #22c55e;
-    }
-
-    .agent-prompt-box {
-      padding: 0.9rem;
-      background: rgba(0, 0, 0, 0.25);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #cbd5e1;
-      font-size: 0.8125rem;
-      line-height: 1.4;
-    }
-
-    .agent-subtext {
-      padding: 0.75rem 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      color: var(--text-muted);
-      font-size: 0.775rem;
-    }
-
-    .agent-diff-card {
-      background: #101216;
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 6px;
-      padding: 0.6rem 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .diff-status {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .diff-add { color: #22c55e; }
-    .diff-del { color: #ef4444; }
-
-    /* Section Split Standard */
-    .feature-split-section {
-      padding: 7rem 0 4rem;
-      position: relative;
-    }
-
-    .feature-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      margin-bottom: 3.5rem;
-      align-items: flex-start;
-    }
-
-    .feature-title {
-      font-size: clamp(2rem, 3.2vw, 3rem);
-      font-weight: 400;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-      color: #fff;
-    }
-
-    .feature-desc-wrap {
-      max-width: 480px;
-    }
-
-    .feature-desc {
-      font-size: 1.125rem;
-      line-height: 1.6;
-      color: var(--text-muted);
-      margin-bottom: 1.25rem;
-      font-weight: 400;
-    }
-
-    .feature-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.9375rem;
-      font-weight: 400;
-      transition: color 0.15s;
-    }
-    .feature-link:hover {
-      color: #fff;
-    }
-
-    /* Interactive Showcase Card Containers */
-    .showcase-stage {
-      position: relative;
-      border-radius: 14px;
-      background: #0d0e11;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 2.5rem;
-      overflow: hidden;
-      min-height: 480px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Section 2: Intake & Integrations (Slack chat + Board cards) */
-    .intake-layout {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .slack-card {
-      background: #14151a;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      z-index: 10;
-    }
-
-    .slack-header {
-      background: #191a20;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #fff;
-      font-size: 0.8125rem;
-      font-weight: 500;
-    }
-
-    .slack-body {
-      padding: 1.25rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-      font-size: 0.8125rem;
-    }
-
-    .slack-msg {
-      display: flex;
-      gap: 0.65rem;
-    }
-
-    .slack-msg-author {
+      font-size: 11px;
       font-weight: 600;
-      color: #fff;
-      font-size: 0.8125rem;
+      color: #bbb;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-
-    .slack-time {
-      color: var(--text-dim);
-      font-weight: 400;
-      font-size: 0.75rem;
-      margin-left: 0.35rem;
+    .activity-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
-
-    .slack-text {
-      color: #a3a8b4;
-      margin-top: 0.2rem;
+    .activity-user-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .activity-user-name {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+    .activity-msg {
+      color: #cfd3da;
       line-height: 1.45;
     }
-
-    .slack-tag {
-      color: #60a5fa;
-      background: rgba(96, 165, 250, 0.1);
+    .activity-msg .tag-mention {
+      color: var(--accent);
+      background: rgba(94, 106, 210, 0.12);
       padding: 1px 4px;
       border-radius: 3px;
-    }
-
-    .linear-bot-pill {
-      background: rgba(255, 255, 255, 0.04);
-      border-radius: 6px;
-      padding: 0.5rem 0.65rem;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      margin-top: 0.35rem;
-    }
-
-    .linear-bot-pill ul {
-      list-style: none;
-      margin-top: 0.3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      color: #cbd5e1;
-    }
-
-    .linear-bot-pill li {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .linear-bot-pill .dot {
-      width: 5px;
-      height: 5px;
-      background: #f59e0b;
-      border-radius: 50%;
-    }
-
-    .slack-input-box {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 0.65rem 1rem;
-      background: #111216;
-      color: var(--text-dim);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8125rem;
-    }
-
-    /* Linear Board in background */
-    .board-bg-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      opacity: 0.75;
-    }
-
-    .board-col {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .board-col-header {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding-bottom: 0.25rem;
-    }
-
-    .board-card {
-      background: #14151a;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 8px;
-      padding: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      transition: border-color 0.15s;
-    }
-
-    .board-card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .board-card-id {
-      color: var(--text-dim);
-      font-size: 0.6875rem;
-    }
-
-    .board-card-title {
-      color: #e2e8f0;
       font-weight: 500;
     }
 
-    .board-card-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.6875rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    .tag-circle {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    /* Section 3: Build, review, and ship (Code Diff Viewer) */
-    .diff-stage-wrap {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 1.5rem;
-      align-items: flex-start;
-    }
-
-    .diff-sidebar-issues {
-      background: #111216;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 8px;
-      padding: 0.75rem;
+    /* Floating Agent Opus 5.5 Card */
+    .floating-agent-dialog {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      width: 380px;
+      background: #141518;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
-      font-size: 0.75rem;
+      overflow: hidden;
     }
-
-    .diff-issue-item {
-      padding: 0.5rem;
-      border-radius: 6px;
+    .agent-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .agent-header-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .agent-header-left .agent-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+    .agent-model-pill {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .agent-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12.5px;
+    }
+    .agent-input-bubble {
+      background: #1a1c20;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: #e5e7eb;
+    }
+    .agent-context-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--yellow);
+      margin-top: 4px;
+    }
+    .agent-response-block {
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      padding-top: 10px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .agent-status-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .agent-pr-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .agent-pr-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+    }
+    .diff-counts {
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+    .diff-counts .add { color: var(--green); }
+    .diff-counts .del { color: var(--red); }
+    .btn-preview-tag {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Companies Logos */
+    .companies-section {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+    .companies-title {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      margin-bottom: 36px;
+    }
+    .companies-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      opacity: 0.6;
+      filter: grayscale(1);
+    }
+    .company-logo {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    /* 3 Pillars */
+    .pillars-section {
+      padding: 60px 0 100px;
+    }
+    .pillars-intro {
+      max-width: 680px;
+      margin-bottom: 48px;
+    }
+    .pillars-intro h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .pillars-intro p {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .pillar-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+    .pillar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .pillar-card h3 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .pillar-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Product Feature Section 1: Intake & integrations (Faithful to Image 2) */
+    .feature-showcase-section {
+      padding: 100px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .showcase-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: flex-start;
+      margin-bottom: 60px;
+    }
+    .showcase-title-area h2 {
+      font-size: clamp(32px, 4.5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 500;
+      color: #fff;
+    }
+    .showcase-desc-area {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 480px;
+    }
+    .showcase-desc-area p {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .showcase-learn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    /* Kanban Board & Slack Thread (Image 2) */
+    .board-mockup-wrapper {
+      position: relative;
+      border-radius: 12px;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+    }
+    .board-container {
+      background: #0d0e10;
+      border-radius: 11px;
+      min-height: 520px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 24px;
+      position: relative;
+      user-select: none;
+    }
+    .board-column {
+      background: rgba(255, 255, 255, 0.015);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .column-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 4px 6px;
+    }
+    .col-title-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .dot-gray { background: #6b7280; }
+    .dot-blue { background: #3b82f6; }
+    .dot-amber { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .board-card {
+      background: #151619;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+    .card-title {
+      color: #e5e7eb;
+      font-weight: 450;
+      line-height: 1.4;
+    }
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .badge-tag {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
+    .badge-bug { color: #f87171; background: rgba(239, 68, 68, 0.1); }
+    .badge-design { color: #c084fc; background: rgba(168, 85, 247, 0.1); }
+    .badge-perf { color: #fbbf24; background: rgba(245, 158, 11, 0.1); }
+
+    /* Floating Slack Thread Overlay */
+    .thread-overlay-card {
+      position: absolute;
+      top: 36px;
+      left: 36px;
+      width: 360px;
+      background: #141518;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .thread-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .thread-header-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .thread-messages {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 12px;
+    }
+    .thread-msg {
+      display: flex;
+      gap: 10px;
+    }
+    .thread-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: #27282d;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 11px;
+      color: #ccc;
+    }
+    .thread-msg-body {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .thread-msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .thread-msg-author {
+      font-weight: 500;
+      color: #fff;
+    }
+    .thread-msg-time {
+      color: var(--text-dim);
+    }
+    .thread-msg-text {
+      color: #d1d5db;
+      line-height: 1.4;
+    }
+    .thread-created-issues {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11.5px;
+    }
+    .thread-created-issues li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e5e7eb;
+    }
+    .thread-created-issues .dot-bullet {
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .thread-input-box {
+      padding: 10px 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: #0f1012;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .showcase-features-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 36px;
+    }
+    .feature-tag-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-size: 13px;
       color: var(--text-muted);
       cursor: pointer;
     }
-    .diff-issue-item.active {
-      background: rgba(255, 255, 255, 0.06);
+
+    /* Product Feature Section 2: Build, review, and ship (Faithful to Image 3) */
+    .diff-mockup-wrapper {
+      position: relative;
+      border-radius: 12px;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+    }
+    .diff-container {
+      background: #0c0d0f;
+      border-radius: 11px;
+      min-height: 500px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      overflow: hidden;
+    }
+    .diff-sidebar {
+      background: #090a0b;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .diff-group-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .diff-file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .diff-file-item.active {
+      background: rgba(255, 255, 255, 0.05);
       color: #fff;
     }
-
-    .diff-viewer-window {
-      background: #0d0f12;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      overflow: hidden;
-      font-family: var(--font-mono);
-      font-size: 0.775rem;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-    }
-
-    .diff-window-bar {
-      background: #15171d;
-      padding: 0.6rem 1rem;
+    .diff-file-name {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .diff-editor {
+      background: #0f1012;
+      display: flex;
+      flex-direction: column;
+    }
+    .editor-topbar {
+      height: 40px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 11.5px;
+      font-family: var(--font-mono);
       color: var(--text-muted);
     }
-
-    .diff-body {
-      padding: 1rem 0;
+    .editor-file-path {
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .code-diff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 12px;
       line-height: 1.6;
     }
-
-    .diff-line {
-      display: grid;
-      grid-template-columns: 36px 1fr;
-      padding: 0 1rem;
+    .code-diff-table td {
+      padding: 2px 10px;
+      white-space: pre;
     }
-
-    .diff-line.del {
-      background: rgba(239, 68, 68, 0.1);
+    .line-num {
+      width: 36px;
+      color: #4b5563;
+      text-align: right;
+      user-select: none;
+      padding-right: 12px;
+    }
+    .line-del {
+      background: rgba(239, 68, 68, 0.15);
       color: #fca5a5;
     }
-
-    .diff-line.add {
-      background: rgba(34, 197, 94, 0.1);
+    .line-add {
+      background: rgba(16, 185, 129, 0.15);
       color: #86efac;
     }
-
-    .diff-line .line-num {
-      color: #4b5563;
-      user-select: none;
-      font-size: 0.725rem;
+    .line-normal {
+      color: #9ca3af;
     }
 
-    /* Section 4: Changelog */
+    /* Changelog Section (Faithful to Image 4) */
     .changelog-section {
-      padding: 5rem 0 7rem;
+      padding: 100px 0;
+      border-top: 1px solid var(--border-subtle);
     }
-
-    .changelog-title {
-      font-size: clamp(2rem, 3.2vw, 3rem);
-      font-weight: 400;
-      letter-spacing: -0.03em;
+    .changelog-header {
+      margin-bottom: 40px;
+    }
+    .changelog-header h2 {
+      font-size: clamp(32px, 4.5vw, 56px);
+      letter-spacing: -0.04em;
+      font-weight: 500;
       color: #fff;
-      margin-bottom: 3.5rem;
     }
-
+    .timeline-track {
+      position: relative;
+      margin-bottom: 30px;
+      padding-top: 12px;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 17px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 0;
+    }
     .changelog-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
+      gap: 32px;
       position: relative;
-    }
-
-    .changelog-timeline-line {
-      position: absolute;
-      top: 6px;
-      left: 10px;
-      right: 10px;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.1);
       z-index: 1;
     }
-
     .changelog-card {
-      position: relative;
-      z-index: 2;
       display: flex;
       flex-direction: column;
-      padding-top: 1.5rem;
+      gap: 12px;
+      position: relative;
     }
-
-    .timeline-dot {
+    .timeline-node {
       width: 11px;
       height: 11px;
       border-radius: 50%;
-      background: #2a2e37;
-      border: 2px solid var(--bg);
-      position: absolute;
-      top: 1px;
-      left: 0;
+      background: #1e2024;
+      border: 2px solid #6b7280;
+      margin-bottom: 16px;
     }
-
-    .timeline-dot.highlight {
+    .changelog-card:first-child .timeline-node {
       background: #ef4444;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+      border-color: #ef4444;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
     }
-
-    .changelog-headline {
-      font-size: 0.9375rem;
-      color: #fff;
+    .changelog-card h3 {
+      font-size: 16px;
       font-weight: 500;
-      margin-bottom: 0.4rem;
+      color: #fff;
+      line-height: 1.3;
     }
-
-    .changelog-desc {
+    .changelog-card p {
+      font-size: 13px;
       color: var(--text-muted);
-      font-size: 0.8125rem;
-      line-height: 1.45;
-      margin-bottom: 0.75rem;
+      line-height: 1.5;
     }
-
     .changelog-date {
-      font-size: 0.6875rem;
+      font-size: 11px;
       color: var(--text-dim);
+      font-family: var(--font-mono);
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
     }
-
-    .view-all-link {
+    .changelog-view-all {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      margin-top: 2rem;
-      font-size: 0.875rem;
+      gap: 6px;
       color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .view-all-link:hover {
-      color: #fff;
+      font-size: 13.5px;
+      margin-top: 36px;
     }
 
-    /* Customer Quotes / Testimonials Section */
-    .quotes-grid {
-      margin-top: 4.5rem;
+    /* Customer Testimonials (Faithful to Image 4) */
+    .testimonials-section {
+      padding: 60px 0 120px;
+    }
+    .testimonials-grid {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 24px;
     }
-
     .quote-card {
-      border-radius: 12px;
-      padding: 3rem 2.5rem;
+      border-radius: 16px;
+      padding: 48px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 340px;
+      min-height: 380px;
       position: relative;
-      overflow: hidden;
     }
-
-    /* First quote with gentle blue-violet gradient mesh */
-    .quote-card.openai {
-      background: linear-gradient(135deg, #e4ecf7 0%, #d8e2f0 50%, #ccd8e9 100%);
-      color: #0b0f19;
+    .quote-card-light {
+      background: radial-gradient(100% 100% at 50% 0%, #e0e7ff 0%, #dbeafe 60%, #c7d2fe 100%);
+      color: #0f172a;
     }
-
-    .quote-card.openai::after {
-      content: "";
-      position: absolute;
-      right: -20px;
-      bottom: -20px;
-      width: 240px;
-      height: 240px;
-      opacity: 0.12;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z'/%3E%3Cpath d='M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-size: contain;
-      pointer-events: none;
+    .quote-card-neon {
+      background: #d4f826;
+      color: #08090a;
     }
-
-    /* Second quote with vibrant lime chartreuse background */
-    .quote-card.ramp {
-      background-color: #d2f822;
-      color: #0a0c02;
-    }
-
     .quote-text {
-      font-size: clamp(1.4rem, 2.1vw, 2.1rem);
-      font-weight: 400;
+      font-size: clamp(22px, 2.5vw, 32px);
       line-height: 1.25;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.03em;
+      font-weight: 500;
+      max-width: 520px;
     }
-
     .quote-author {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      margin-top: 2rem;
+      gap: 14px;
+      margin-top: 32px;
     }
-
-    .quote-avatar {
+    .author-icon {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(0, 0, 0, 0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      font-size: 0.85rem;
     }
-
-    .author-info {
-      display: flex;
-      flex-direction: column;
-    }
-
     .author-name {
+      font-size: 14px;
       font-weight: 600;
-      font-size: 0.875rem;
+    }
+    .author-role {
+      font-size: 12.5px;
+      opacity: 0.75;
     }
 
-    .author-role {
-      font-size: 0.775rem;
-      opacity: 0.7;
+    /* CTA Section */
+    .cta-section {
+      padding: 100px 0;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+    .cta-eyebrow {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .cta-title {
+      font-size: clamp(36px, 5.5vw, 68px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 40px;
+    }
+    .cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .btn-primary {
+      background: #fff;
+      color: #08090a;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 9999px;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 9999px;
     }
 
     /* Footer */
-    footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 4rem 0 3rem;
-      color: var(--text-dim);
-      font-size: 0.8125rem;
+    footer.site-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 80px 0 40px;
+      font-size: 13px;
+      color: var(--text-muted);
     }
-
-    .footer-content {
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(4, 1fr);
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+    .footer-brand {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 240px;
+    }
+    .footer-col h4 {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-bottom {
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 12px;
+      color: var(--text-dim);
     }
 
-    /* Responsive */
     @media (max-width: 960px) {
-      .app-window {
+      .pillars-grid, .changelog-grid, .testimonials-grid {
         grid-template-columns: 1fr;
       }
-      .app-sidebar {
-        display: none;
-      }
-      .feature-header {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      .intake-layout {
+      .board-container {
         grid-template-columns: 1fr;
       }
-      .diff-stage-wrap {
+      .diff-container {
         grid-template-columns: 1fr;
       }
-      .changelog-grid {
+      .showcase-header {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .footer-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 2.5rem 1.5rem;
       }
-      .changelog-timeline-line {
-        display: none;
+      .floating-agent-dialog {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        margin: 20px 14px;
+        width: auto;
       }
-      .quotes-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .nav-links {
-        display: none;
-      }
-      .changelog-grid {
-        grid-template-columns: 1fr;
+      .thread-overlay-card {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        margin-bottom: 20px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <header>
-    <div class="nav-container">
-      <a href="#" class="brand">
-        <!-- Linear Logo SVG -->
-        <svg viewBox="0 0 100 100" fill="currentColor">
-          <path d="M1.22 61.27c-1.63-6.1.18-12.7 4.74-17.26l47.53-47.53c4.56-4.56 11.16-6.37 17.26-4.74-1.46 3.16-3.8 6.02-6.84 8.04L13.79 49.9c-4.8 3.2-9.41 7.21-12.57 11.37z" opacity="0.4"/>
-          <path d="M38.73 98.78c-6.1 1.63-12.7-.18-17.26-4.74l47.53-47.53c4.56-4.56 6.37-11.16 4.74-17.26 3.16 1.46 6.02 3.8 8.04 6.84L91.9 86.21c3.2 4.8 7.21 9.41 11.37 12.57-6.1 1.63-12.7-.18-17.26-4.74L38.73 98.78z" opacity="0.6"/>
-          <path d="M5.96 44.01C1.4 48.57-.41 55.17 1.22 61.27c4.16-3.16 8.77-7.17 12.57-11.37L63.91 0.12C57.81-1.51 51.21.3 46.65 4.86L5.96 44.01z" opacity="0.8"/>
-          <path d="M8.2 59.5c1.46-3.16 3.8-6.02 6.84-8.04L65.16 1.34c4.8-3.2 9.41-7.21 12.57-11.37-1.63 6.1.18 12.7 4.74 17.26L34.94 54.76c-4.56 4.56-11.16 6.37-17.26 4.74z" fill="#fff"/>
-          <path d="M2.5 50 C 2.5 23.77 23.77 2.5 50 2.5 C 76.23 2.5 97.5 23.77 97.5 50 C 97.5 76.23 76.23 97.5 50 97.5 C 23.77 97.5 2.5 76.23 2.5 50 Z" fill="none" stroke="currentColor" stroke-width="0"/>
-        </svg>
-        <span>Linear</span>
-      </a>
+  <!-- Top Announcement Bar -->
+  <div class="top-announcement">
+    <span class="badge">New</span>
+    <span>Linear coding agent: Now with Opus 5.5 and GitHub Loop Triggers.</span>
+    <a href="#changelog">Read changelog &rarr;</a>
+  </div>
 
-      <nav class="nav-links">
-        <a href="#product">Product</a>
-        <a href="#resources">Resources</a>
-        <a href="#customers">Customers</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#now">Now</a>
-        <a href="#contact">Contact</a>
-      </nav>
+  <!-- Ambient Glow -->
+  <div class="bg-lights"></div>
 
-      <div class="nav-actions">
-        <a href="#login" class="btn-login">Log in</a>
-        <div class="nav-divider"></div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="#" class="logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M2.5 12c0-5.247 4.253-9.5 9.5-9.5s9.5 4.253 9.5 9.5-4.253 9.5-9.5 9.5S2.5 17.247 2.5 12zm2.08 3.535l9.955-9.955A7.42 7.42 0 0 0 12 4.58c-4.098 0-7.42 3.322-7.42 7.42 0 1.28.324 2.486.899 3.535zm1.53 1.53A7.375 7.375 0 0 0 12 19.42c4.098 0 7.42-3.322 7.42-7.42 0-1.28-.324-2.486-.9-3.535L6.11 17.065z"/>
+          </svg>
+          Linear
+        </a>
+        <ul class="nav-menu">
+          <li><a href="#product">Product</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#customers">Customers</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#now">Now</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#login">Log in</a>
+        <div class="divider"></div>
         <a href="#signup" class="btn-signup">Sign up</a>
       </div>
     </div>
   </header>
 
-  <!-- Section 1: Hero -->
-  <main class="container">
-    <section class="hero-section">
-      <div class="hero-header">
-        <div class="hero-content">
-          <h1 class="hero-title">The product development<br>system for teams and agents</h1>
-          <p class="hero-subtitle">Purpose-built for planning and building products. Designed for the AI era.</p>
-        </div>
+  <!-- Hero Section -->
+  <section class="hero" id="product">
+    <div class="container">
+      <div class="hero-meta-badge">
+        <span>Linear 2026.1 &bull; Purpose-built for modern product teams</span>
+      </div>
+      <h1 class="hero-title">
+        The product development<br>
+        system for teams and agents
+      </h1>
+      <div class="hero-subtitle-row">
+        <p class="hero-subtitle">
+          Purpose-built for planning and building products. Designed for the AI era.
+        </p>
         <a href="#loops" class="hero-badge-link">
-          <span class="pill-new">New</span>
-          <span class="loops-name">Loops</span>
-          <span>&rarr;</span>
+          <span class="pill">New</span>
+          <span>Loops &rarr;</span>
         </a>
       </div>
 
-      <!-- Hero Visual: App Window -->
-      <div class="app-window-wrapper">
-        <div class="app-window">
+      <!-- App Interface Reproduction (Image 1) -->
+      <div class="hero-mockup-wrapper">
+        <div class="mockup-container">
           <!-- Sidebar -->
-          <aside class="app-sidebar">
+          <div class="mockup-sidebar">
             <div class="sidebar-user">
               <div class="sidebar-user-left">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <div class="sidebar-user-avatar">L</div>
                 <span>Linear</span>
+                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" style="opacity:0.6"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
               </div>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-
-            <div class="sidebar-nav">
-              <div class="sidebar-nav-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-                <span>Pulse</span>
-              </div>
-              <div class="sidebar-nav-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                <span>Inbox</span>
-              </div>
-              <div class="sidebar-nav-item active">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
-                <span>My issues</span>
-              </div>
-              <div class="sidebar-nav-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span>Reviews</span>
+              <div class="sidebar-actions">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
               </div>
             </div>
 
             <div>
-              <div class="sidebar-section-title">Workspace</div>
-              <div class="sidebar-nav">
-                <div class="sidebar-nav-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
-                  <span>Initiatives</span>
-                </div>
-                <div class="sidebar-nav-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                  <span>Projects</span>
-                </div>
-                <div class="sidebar-nav-item">
-                  <span>... More</span>
-                </div>
-              </div>
+              <ul class="sidebar-menu-list">
+                <li class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Pulse</li>
+                <li class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>Inbox</li>
+                <li class="sidebar-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>My issues</li>
+                <li class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Reviews</li>
+              </ul>
             </div>
 
             <div>
-              <div class="sidebar-section-title">Favorites</div>
-              <div class="sidebar-nav">
-                <div class="sidebar-nav-item">
-                  <span style="color:#f59e0b;">&bull;</span>
-                  <span>Faster app launch</span>
-                </div>
-                <div class="sidebar-nav-item">
-                  <span style="color:#60a5fa;">&bull;</span>
-                  <span>Agent tasks</span>
-                </div>
-                <div class="sidebar-nav-item">
-                  <span style="color:#a855f7;">&bull;</span>
-                  <span>Agent Insights</span>
-                </div>
-                <div class="sidebar-nav-item">
-                  <span style="color:#ec4899;">&times;</span>
-                  <span>UI Refresh</span>
-                </div>
-              </div>
+              <div class="sidebar-section-title"><span>Workspace</span></div>
+              <ul class="sidebar-menu-list">
+                <li class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Initiatives</li>
+                <li class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>Projects</li>
+                <li class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>More</li>
+              </ul>
             </div>
-          </aside>
 
-          <!-- Main Panel -->
-          <div class="app-main">
-            <div class="app-topbar">
-              <div class="issue-key">
-                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b;"></span>
-                <span>DRV-8852</span>
-                <span class="issue-title-bar">Faster app launch</span>
-                <span style="color: #62666d; margin-left: 6px;">&#9733;</span>
+            <div>
+              <div class="sidebar-section-title"><span>Favorites</span></div>
+              <ul class="sidebar-menu-list">
+                <li class="sidebar-item"><span class="sidebar-dot" style="background:#f59e0b"></span> Faster app launch</li>
+                <li class="sidebar-item"><span class="sidebar-dot" style="background:#10b981"></span> Agent tasks</li>
+                <li class="sidebar-item"><span class="sidebar-dot" style="background:#3b82f6"></span> Agent Insights</li>
+                <li class="sidebar-item"><span class="sidebar-dot" style="background:#ec4899"></span> UI Refresh</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Main View -->
+          <div class="mockup-main">
+            <div class="mockup-topbar">
+              <div class="topbar-breadcrumbs">
+                <span class="topbar-badge-id"><span class="dot"></span> DRV-8852</span>
+                <span style="color:var(--text-dim)">/</span>
+                <span>Faster app launch</span>
               </div>
-              <div>
-                <span>1/64 &nbsp; &uarr; &darr;</span>
+              <div class="topbar-actions">
+                <span>1 / 84</span>
+                <span>&uarr; &darr;</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </div>
             </div>
 
-            <div class="app-issue-body">
-              <h2 class="issue-heading">Faster app launch</h2>
+            <div class="mockup-body">
+              <h2 class="issue-title">Faster app launch</h2>
               <p class="issue-desc">
                 Render UI before <code>vehicle_state</code> sync when minimum required state is present, instead of blocking on full refresh during iOS startup.
               </p>
 
-              <div class="app-activity-stream">
-                <div class="activity-section-header">Activity</div>
-
-                <div class="activity-row">
-                  <div class="avatar">&#9881;</div>
-                  <div class="activity-text">
-                    <strong>Linear</strong> created the issue via Slack on behalf of <strong>Karri</strong> <span class="meta-time">2m ago</span>
-                  </div>
-                </div>
-
-                <div class="activity-row">
-                  <div class="avatar">&#128392;</div>
-                  <div class="activity-text">
-                    <strong>Triage Intelligence</strong> added the labels <code>Performance</code> and <code>iOS</code> <span class="meta-time">2m ago</span>
-                  </div>
-                </div>
-
-                <div class="activity-row">
-                  <div class="avatar" style="background: #3b82f6;">K</div>
-                  <div class="activity-text">
-                    <strong>karri</strong> <span class="meta-time">4m ago</span>
-                    <p style="margin-top: 4px; color: #cbd5e1;">Right now we show a spinner forever, which makes it look like the car disappeared...</p>
-                  </div>
-                </div>
-
-                <div class="activity-row">
-                  <div class="avatar" style="background: #10b981;">J</div>
-                  <div class="activity-text">
-                    <strong>jori</strong> <span class="meta-time">just now</span>
-                    <p style="margin-top: 4px; color: #cbd5e1;"><span style="color:#818cf8;">@Linear</span> can you take a stab at this?</p>
-                  </div>
-                </div>
-
-                <div class="activity-row">
-                  <div class="avatar">&#10022;</div>
-                  <div class="activity-text">
-                    <strong>Linear</strong> connected by Jori <span class="meta-time">2m ago</span>
-                    <p style="margin-top: 2px; color: #94a3b8;">Changed 2 files &bull; Draft PR awaiting your review</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Floating Agent Dock Widget -->
-            <div class="agent-dock">
-              <div class="agent-header">
-                <div class="agent-title-pill">
-                  <span class="agent-status-dot"></span>
-                  <span>Linear Opus 3.5</span>
-                </div>
-                <div style="color: var(--text-dim); display:flex; gap:6px;">
-                  <span>&minus;</span>
-                  <span>&#x2922;</span>
-                  <span>&times;</span>
-                </div>
-              </div>
-
-              <div class="agent-prompt-box">
-                "Fix the dimmed ride rows that never reset and open a PR"
-                <div style="margin-top: 6px; font-size: 0.725rem; color: #64748b;">
-                  <span>&#x1F517; DRV-364 added to context</span>
-                </div>
-              </div>
-
-              <div class="agent-subtext">
-                <div>Worked for 10 sec &rarr;</div>
-                <div style="color: #cbd5e1;">Pushed and opened a draft PR. Removed dimmedIds — isItemDimmed now checks waitingStatusById directly.</div>
+              <div class="activity-section">
+                <div class="activity-heading">Activity</div>
                 
-                <div class="agent-diff-card">
-                  <div>
-                    <div>Changed 2 files <span class="diff-add">+22</span> <span class="diff-del">-10</span></div>
-                    <div style="font-size: 0.7rem; color: #64748b;">12. Draft: Reset dimmed ride rows</div>
+                <div class="activity-item">
+                  <div class="activity-avatar" style="background:#2e1065;color:#c084fc">L</div>
+                  <div class="activity-content">
+                    <div class="activity-user-row">
+                      <span class="activity-user-name">Linear</span>
+                      <span>created the issue via Slack on behalf of Karri &bull; 2min ago</span>
+                    </div>
                   </div>
-                  <button style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.725rem; cursor: pointer;">Preview</button>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-avatar">K</div>
+                  <div class="activity-content">
+                    <div class="activity-user-row">
+                      <span class="activity-user-name">karri</span>
+                      <span>4 min ago</span>
+                    </div>
+                    <div class="activity-msg">
+                      Right now we show a spinner forever, which makes it look like the car disappeared...
+                    </div>
+                  </div>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-avatar">J</div>
+                  <div class="activity-content">
+                    <div class="activity-user-row">
+                      <span class="activity-user-name">jori</span>
+                      <span>just now</span>
+                    </div>
+                    <div class="activity-msg">
+                      <span class="tag-mention">@Linear</span> can you take a stab at this?
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
+            <!-- Floating Agent Opus 5.5 Card -->
+            <div class="floating-agent-dialog">
+              <div class="agent-header">
+                <div class="agent-header-left">
+                  <div class="agent-dot"></div>
+                  <span>Linear</span>
+                  <span class="agent-model-pill">Opus 5.5</span>
+                </div>
+                <div style="color:var(--text-dim);font-size:11px;">&minus; &times;</div>
+              </div>
+              <div class="agent-body">
+                <div class="agent-input-bubble">
+                  Fix the dimmed ride rows that never reset and open a PR
+                  <div class="agent-context-tag">
+                    <span>&bull;</span> DRV-384 added to context
+                  </div>
+                </div>
+                <div class="agent-response-block">
+                  <div class="agent-status-line">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Worked for 10 sec &bull; Complete</span>
+                  </div>
+                  <div>Pushed and opened a draft PR. Removed dimmedIds &mdash; IsItemDimmed now checks waitingStatusById directly.</div>
+                  <div class="agent-pr-card">
+                    <div class="agent-pr-header">
+                      <span>Changed 2 files <span class="diff-counts"><span class="add">+22</span> <span class="del">-10</span></span></span>
+                      <span class="btn-preview-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Preview</span>
+                    </div>
+                    <div style="font-family:var(--font-mono);font-size:11px;color:#9ca3af;">
+                      Draft: Reset dimmed ride rows<br>
+                      <span style="color:#6b7280;font-size:10px;">master &larr; ride/drv-384-reset-dimmed-rows</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Section 2: Intake and Integrations -->
-    <section class="feature-split-section" id="product">
-      <div class="feature-header">
-        <h2 class="feature-title">Intake<br>and integrations</h2>
-        <div class="feature-desc-wrap">
-          <p class="feature-desc">
-            Automatically turn conversations and customer feedback into actionable issues that are instantly routed, labeled, and prioritized for the right team.
-          </p>
-          <a href="#" class="feature-link">Learn more &rarr;</a>
+  <!-- Companies Section -->
+  <section class="companies-section" id="customers">
+    <div class="container">
+      <div class="companies-title">Powering the companies building the future</div>
+      <div class="companies-grid">
+        <div class="company-logo">OpenAI</div>
+        <div class="company-logo">Vercel</div>
+        <div class="company-logo">Ramp</div>
+        <div class="company-logo">Cash App</div>
+        <div class="company-logo">Scale</div>
+        <div class="company-logo">Substack</div>
+        <div class="company-logo">Brex</div>
+        <div class="company-logo">Cursor</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pillars Section -->
+  <section class="pillars-section">
+    <div class="container">
+      <div class="pillars-intro">
+        <h2>A new species of product tool.</h2>
+        <p>Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products.</p>
+      </div>
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <h3>Purpose-built</h3>
+          <p>Linear is shaped by the practices and principles of world-class product teams.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h3>Powered by agents</h3>
+          <p>Designed for workflows shared by humans and agents. From drafting PRDs to pushing PRs.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3>Designed for speed</h3>
+          <p>Reduces noise and restores momentum to help teams ship with high velocity and focus.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase 1: Intake and integrations (Image 2) -->
+  <section class="feature-showcase-section">
+    <div class="container">
+      <div class="showcase-header">
+        <div class="showcase-title-area">
+          <h2>Intake<br>and integrations</h2>
+        </div>
+        <div class="showcase-desc-area">
+          <p>Automatically turn conversations and customer feedback into actionable issues that are instantly routed, labeled, and prioritized for the right team.</p>
+          <a href="#" class="showcase-learn-more">Learn more &rarr;</a>
         </div>
       </div>
 
-      <div class="showcase-stage">
-        <div class="intake-layout">
-          <!-- Foreground Slack Thread card -->
-          <div class="slack-card">
-            <div class="slack-header">
-              <span>Thread #product</span>
-              <span style="color: var(--text-dim);">&times;</span>
+      <!-- Kanban Board Mockup with Thread Overlay -->
+      <div class="board-mockup-wrapper">
+        <div class="board-container">
+          <!-- Column 1: Backlog -->
+          <div class="board-column">
+            <div class="column-header">
+              <span class="col-title-badge"><span class="status-dot dot-gray"></span> Backlog</span>
+              <span>8</span>
             </div>
-            <div class="slack-body">
-              <div class="slack-msg">
-                <div class="avatar" style="background:#475569;">K</div>
-                <div>
-                  <div>
-                    <span class="slack-msg-author">karri</span>
-                    <span class="slack-time">11:43 AM</span>
-                  </div>
-                  <div class="slack-text">
-                    <span class="slack-tag">@Linear</span> create issues and assign to me
-                  </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-2085</span><span>&bull;</span></div>
+              <div class="card-title">Reduce UI flicker during autonomy switch</div>
+              <div class="card-tags"><span class="badge-tag badge-perf">Performance</span></div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-2094</span><span>&bull;</span></div>
+              <div class="card-title">Add buffering for autonomy event streams</div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-2092</span><span>&bull;</span></div>
+              <div class="card-title">Reduce startup delay caused by vehicle sync</div>
+            </div>
+          </div>
+
+          <!-- Column 2: Todo -->
+          <div class="board-column">
+            <div class="column-header">
+              <span class="col-title-badge"><span class="status-dot dot-blue"></span> Todo</span>
+              <span>71</span>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-926</span><span>&bull;</span></div>
+              <div class="card-title">Remove UI inconsistencies</div>
+              <div class="card-tags"><span class="badge-tag badge-bug">Bug</span><span class="badge-tag badge-design">Design</span></div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-2088</span><span>&bull;</span></div>
+              <div class="card-title">TypeError: Cannot read properties</div>
+              <div class="card-tags"><span class="badge-tag badge-bug">Bug</span></div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-924</span><span>&bull;</span></div>
+              <div class="card-title">Upgrade to Claude Opus 5.5</div>
+              <div class="card-tags"><span class="badge-tag" style="color:#a78bfa">AI</span></div>
+            </div>
+          </div>
+
+          <!-- Column 3: In Progress -->
+          <div class="board-column">
+            <div class="column-header">
+              <span class="col-title-badge"><span class="status-dot dot-amber"></span> In Progress</span>
+              <span>3</span>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-1487</span><span>&bull;</span></div>
+              <div class="card-title">Remove contentData from GraphQL API</div>
+              <div class="card-tags"><span class="badge-tag">API</span></div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>MKT-1028</span><span>&bull;</span></div>
+              <div class="card-title">Launch page assets</div>
+              <div class="card-tags"><span class="badge-tag badge-design">Design</span></div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-2187</span><span>&bull;</span></div>
+              <div class="card-title">Prevent duplicate ride requests on poor net</div>
+              <div class="card-tags"><span class="badge-tag badge-bug">Bug</span></div>
+            </div>
+          </div>
+
+          <!-- Column 4: Done -->
+          <div class="board-column">
+            <div class="column-header">
+              <span class="col-title-badge"><span class="status-dot dot-green"></span> Done</span>
+              <span>53</span>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-2074</span><span>&bull;</span></div>
+              <div class="card-title">Clean up deprecated APIs</div>
+              <div class="card-tags"><span class="badge-tag">API</span></div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-1912</span><span>&bull;</span></div>
+              <div class="card-title">Reduce latency in autonomy state pipeline</div>
+            </div>
+            <div class="board-card">
+              <div class="card-top"><span>ENG-1951</span><span>&bull;</span></div>
+              <div class="card-title">Reduce ETA fluctuations during rerouting</div>
+            </div>
+          </div>
+
+          <!-- Floating Thread Overlay -->
+          <div class="thread-overlay-card">
+            <div class="thread-header">
+              <div class="thread-header-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Thread #product</span>
+              </div>
+              <span style="font-size:11px;color:var(--text-dim)">&bull;&bull;&bull;</span>
+            </div>
+            <div class="thread-messages">
+              <div class="thread-msg">
+                <div class="thread-avatar">K</div>
+                <div class="thread-msg-body">
+                  <div class="thread-msg-meta"><span class="thread-msg-author">karri</span><span class="thread-msg-time">11:43 AM</span></div>
+                  <div class="thread-msg-text">@Linear create issues and assign to me</div>
                 </div>
               </div>
-
-              <div class="slack-msg">
-                <div class="avatar" style="background:#1e293b;">&#9654;</div>
-                <div>
-                  <div>
-                    <span class="slack-msg-author">Linear</span>
-                    <span class="slack-time">11:43 AM</span>
-                  </div>
-                  <div class="slack-text">Created 2 issues:</div>
-                  <div class="linear-bot-pill">
-                    <ul>
-                      <li><span class="dot"></span> ENG-2703 Faster app launch</li>
-                      <li><span class="dot"></span> ENG-2704 Track iOS startup performance</li>
-                    </ul>
-                  </div>
+              <div class="thread-msg">
+                <div class="thread-avatar" style="background:#2e1065;color:#c084fc">L</div>
+                <div class="thread-msg-body">
+                  <div class="thread-msg-meta"><span class="thread-msg-author">Linear</span><span class="thread-msg-time">11:43 AM</span></div>
+                  <div class="thread-msg-text">Created 2 issues:</div>
+                  <ul class="thread-created-issues">
+                    <li><span class="dot-bullet"></span> ENG-2703 Faster app launch</li>
+                    <li><span class="dot-bullet"></span> ENG-2704 Track iOS startup performance</li>
+                  </ul>
                 </div>
               </div>
-
-              <div class="slack-msg">
-                <div class="avatar" style="background:#475569;">K</div>
-                <div>
-                  <div>
-                    <span class="slack-msg-author">karri</span>
-                    <span class="slack-time">11:45 AM</span>
-                  </div>
-                  <div class="slack-text">cc</div>
+              <div class="thread-msg">
+                <div class="thread-avatar">K</div>
+                <div class="thread-msg-body">
+                  <div class="thread-msg-meta"><span class="thread-msg-author">karri</span><span class="thread-msg-time">11:43 AM</span></div>
+                  <div class="thread-msg-text">cc</div>
                 </div>
               </div>
             </div>
-
-            <div class="slack-input-box">
+            <div class="thread-input-box">
               <span>Reply...</span>
-              <div style="display:flex; gap:8px;">
-                <span>+</span>
-                <span>Aa</span>
-                <span>@</span>
-                <span>&#128206;</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Background Issue Board Columns -->
-          <div class="board-bg-grid">
-            <!-- Todo Column -->
-            <div class="board-col">
-              <div class="board-col-header">
-                <span style="display:inline-block; width:7px; height:7px; border:1px solid #94a3b8; border-radius:50%;"></span>
-                <span>Todo 73</span>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-2704</span>
-                <span class="board-card-title">Track iOS startup performance</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #f59e0b;"></span>
-                  <span>Analytics</span>
-                </div>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-2703</span>
-                <span class="board-card-title">Faster app launch</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #ef4444;"></span>
-                  <span>Performance</span>
-                </div>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-928</span>
-                <span class="board-card-title">Remove UI inconsistencies</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #3b82f6;"></span>
-                  <span>Design</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- In Progress Column -->
-            <div class="board-col">
-              <div class="board-col-header">
-                <span style="display:inline-block; width:7px; height:7px; background:#f59e0b; border-radius:50%;"></span>
-                <span>In Progress 8</span>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-1107</span>
-                <span class="board-card-title">Remove contentData from GraphQL API</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #8b5cf6;"></span>
-                  <span>Backend</span>
-                </div>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">DES-1020</span>
-                <span class="board-card-title">Launch page assets</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #ec4899;"></span>
-                  <span>Design</span>
-                </div>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-2187</span>
-                <span class="board-card-title">Prevent duplicate ride requests on poor netw...</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #ef4444;"></span>
-                  <span>Bug</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Done Column -->
-            <div class="board-col">
-              <div class="board-col-header">
-                <span style="display:inline-block; width:7px; height:7px; background:#5e6ad2; border-radius:50%;"></span>
-                <span>Done</span>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-2041</span>
-                <span class="board-card-title">Clean up stale webhooks</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #10b981;"></span>
-                  <span>Done</span>
-                </div>
-              </div>
-              <div class="board-card">
-                <span class="board-card-id">ENG-1994</span>
-                <span class="board-card-title">Reduce bundle size</span>
-                <div class="board-card-tag">
-                  <span class="tag-circle" style="background: #10b981;"></span>
-                  <span>Done</span>
-                </div>
+              <div style="display:flex;gap:8px;">
+                <span>+</span><span>Aa</span><span>@</span><span>&rarr;</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Section 3: Build, review, and ship -->
-    <section class="feature-split-section">
-      <div class="feature-header">
-        <h2 class="feature-title">Build, review,<br>and ship</h2>
-        <div class="feature-desc-wrap">
-          <p class="feature-desc">
-            Streamline code reviews with clear diffs, better context, and fewer back-and-forth comments. Keep PRs moving without sacrificing quality.
-          </p>
-          <a href="#" class="feature-link">Learn more &rarr;</a>
+      <div class="showcase-features-list">
+        <span class="feature-tag-chip">Linear Agent +</span>
+        <span class="feature-tag-chip">Customer Requests +</span>
+        <span class="feature-tag-chip">Triage +</span>
+        <span class="feature-tag-chip">Linear Asks +</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase 2: Build, review, and ship (Image 3) -->
+  <section class="feature-showcase-section">
+    <div class="container">
+      <div class="showcase-header">
+        <div class="showcase-title-area">
+          <h2>Build, review,<br>and ship</h2>
+        </div>
+        <div class="showcase-desc-area">
+          <p>Streamline code reviews with clear diffs, better context, and fewer back-and-forth comments. Keep PRs moving without sacrificing quality.</p>
+          <a href="#" class="showcase-learn-more">Learn more &rarr;</a>
         </div>
       </div>
 
-      <div class="showcase-stage">
-        <div class="diff-stage-wrap">
-          <!-- Issues list -->
-          <div class="diff-sidebar-issues">
-            <div style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; padding:0.2rem 0.4rem;">In Review 3</div>
-            <div class="diff-issue-item active">
-              <span style="color:#22c55e;">&#9679;</span>
-              <span>ENG-2498 Replace isFullySynced with sync status</span>
+      <div class="diff-mockup-wrapper">
+        <div class="diff-container">
+          <!-- Diff Sidebar -->
+          <div class="diff-sidebar">
+            <div class="diff-group-title">
+              <span>In Review</span>
+              <span>3</span>
             </div>
-            <div class="diff-issue-item">
-              <span style="color:#22c55e;">&#9679;</span>
-              <span>ENG-2380 Show a stale data banner while syncing</span>
+            <div class="diff-file-item active">
+              <div class="diff-file-name">
+                <span class="status-dot dot-green"></span>
+                <span>ENG-2436 Replace isFullySynced</span>
+              </div>
             </div>
-            <div class="diff-issue-item">
-              <span style="color:#22c55e;">&#9679;</span>
-              <span>ENG-2039 Pass sync status to the dashboard</span>
+            <div class="diff-file-item">
+              <div class="diff-file-name">
+                <span class="status-dot dot-green"></span>
+                <span>ENG-2380 Show a stale data banner</span>
+              </div>
+            </div>
+            <div class="diff-file-item">
+              <div class="diff-file-name">
+                <span class="status-dot dot-gray"></span>
+                <span>ENG-2039 Pass sync status to dash</span>
+              </div>
             </div>
 
-            <div style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; padding:0.6rem 0.4rem 0.2rem;">In Progress 4</div>
-            <div class="diff-issue-item">
-              <span style="color:#f59e0b;">&#9679;</span>
-              <span>ENG-2076 Reduce ETA jitter</span>
+            <div class="diff-group-title" style="margin-top:10px;">
+              <span>In Progress</span>
+              <span>4</span>
             </div>
-            <div class="diff-issue-item">
-              <span style="color:#f59e0b;">&#9679;</span>
-              <span>ENG-2108 Handle GPS dropouts gracefully</span>
+            <div class="diff-file-item">
+              <div class="diff-file-name">
+                <span class="status-dot dot-amber"></span>
+                <span>ENG-2076 Reduce ETA jitter</span>
+              </div>
             </div>
-            <div class="diff-issue-item">
-              <span style="color:#f59e0b;">&#9679;</span>
-              <span>ENG-2143 Optimize map tile loading on initial app open</span>
+            <div class="diff-file-item">
+              <div class="diff-file-name">
+                <span class="status-dot dot-amber"></span>
+                <span>ENG-2100 Handle GPS dropouts</span>
+              </div>
+            </div>
+            <div class="diff-file-item">
+              <div class="diff-file-name">
+                <span class="status-dot dot-amber"></span>
+                <span>ENG-2143 Optimize map tile load</span>
+              </div>
             </div>
           </div>
 
-          <!-- Code Diff Window -->
-          <div class="diff-viewer-window">
-            <div class="diff-window-bar">
-              <span>kinetic-ios/src/screens/Home/HomeScreen.tsx</span>
-              <span>Linear &rarr;</span>
+          <!-- Diff Editor -->
+          <div class="diff-editor">
+            <div class="editor-topbar">
+              <div class="editor-file-path">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                <span>kinetic-ios/src/screens/Home/HomeScreen.tsx</span>
+              </div>
+              <div style="color:var(--text-dim)">Linear Diffs</div>
             </div>
-            <div class="diff-body">
-              <div class="diff-line">
-                <span class="line-num">01</span>
-                <span>import React from 'react'</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">02</span>
-                <span>import { View, ActivityIndicator } from 'react-native'</span>
-              </div>
-              <div class="diff-line del">
-                <span class="line-num">03</span>
-                <span>- import { useVehicleState } from '@/hooks/useVehicleState'</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">04</span>
-                <span>import { Dashboard } from '@/components/Dashboard'</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">05</span>
-                <span>&nbsp;</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">06</span>
-                <span>export const HomeScreen = () => {</span>
-              </div>
-              <div class="diff-line del">
-                <span class="line-num">07</span>
-                <span>-   const { vehicleState, isFullySynced } = useVehicleState()</span>
-              </div>
-              <div class="diff-line add">
-                <span class="line-num">07</span>
-                <span>+   const { vehicleState, syncStatus } = useVehicleSync()</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">08</span>
-                <span>&nbsp;</span>
-              </div>
-              <div class="diff-line del">
-                <span class="line-num">09</span>
-                <span>-   if (!isFullySynced) {</span>
-              </div>
-              <div class="diff-line add">
-                <span class="line-num">09</span>
-                <span>+   if (syncStatus === SyncStatus.INITIALIZING) {</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">10</span>
-                <span>      return &lt;ActivityIndicator size="large" /&gt;</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">11</span>
-                <span>    }</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">12</span>
-                <span>&nbsp;</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">13</span>
-                <span>    return (</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">14</span>
-                <span>      &lt;View&gt;</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">15</span>
-                <span>        &lt;Dashboard state={vehicleState} /&gt;</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">16</span>
-                <span>      &lt;/View&gt;</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">17</span>
-                <span>    )</span>
-              </div>
-              <div class="diff-line">
-                <span class="line-num">18</span>
-                <span>}</span>
-              </div>
-            </div>
+
+            <table class="code-diff-table">
+              <tbody>
+                <tr class="line-normal">
+                  <td class="line-num">01</td>
+                  <td>import React from 'react'</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">02</td>
+                  <td>import { View, ActivityIndicator } from 'react-native'</td>
+                </tr>
+                <tr class="line-del">
+                  <td class="line-num">03</td>
+                  <td>- import { useVehicleState } from '@hooks/useVehicleState'</td>
+                </tr>
+                <tr class="line-add">
+                  <td class="line-num">04</td>
+                  <td>+ import { useVehicleState, useSyncStatus } from '@hooks/useVehicleState'</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">05</td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr class="line-del">
+                  <td class="line-num">06</td>
+                  <td>- const { vehicleState, isFullySynced } = useVehicleState()</td>
+                </tr>
+                <tr class="line-add">
+                  <td class="line-num">07</td>
+                  <td>+ const { vehicleState, syncStatus } = useVehicleState()</td>
+                </tr>
+                <tr class="line-del">
+                  <td class="line-num">08</td>
+                  <td>- if (!isFullySynced) {</td>
+                </tr>
+                <tr class="line-add">
+                  <td class="line-num">09</td>
+                  <td>+ if (syncStatus === 'syncing') {</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">10</td>
+                  <td>&nbsp;&nbsp;&nbsp;&nbsp;return &lt;ActivityIndicator size="large" /&gt;</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">11</td>
+                  <td>}</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">12</td>
+                  <td>return (</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">13</td>
+                  <td>&nbsp;&nbsp;&lt;Dashboard state={vehicleState} /&gt;</td>
+                </tr>
+                <tr class="line-normal">
+                  <td class="line-num">14</td>
+                  <td>)</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Section 4: Changelog -->
-    <section class="changelog-section" id="resources">
-      <h2 class="changelog-title">Changelog</h2>
+      <div class="showcase-features-list">
+        <span class="feature-tag-chip">Issues +</span>
+        <span class="feature-tag-chip">Git automations +</span>
+        <span class="feature-tag-chip">Guided reviews +</span>
+        <span class="feature-tag-chip">Cycles +</span>
+        <span class="feature-tag-chip">Diffs +</span>
+        <span class="feature-tag-chip">Releases +</span>
+      </div>
+    </div>
+  </section>
 
-      <div class="changelog-grid">
-        <div class="changelog-timeline-line"></div>
+  <!-- Changelog Section (Image 4) -->
+  <section class="changelog-section" id="changelog">
+    <div class="container">
+      <div class="changelog-header">
+        <h2>Changelog</h2>
+      </div>
 
-        <!-- Item 1 -->
-        <div class="changelog-card">
-          <div class="timeline-dot highlight"></div>
-          <h3 class="changelog-headline">Mobile Diffs</h3>
-          <p class="changelog-desc">Streamline and review pull request changes directly from your mobile device.</p>
-          <span class="changelog-date">Nov 4, 2026</span>
-        </div>
+      <div class="timeline-track">
+        <div class="timeline-line"></div>
+        <div class="changelog-grid">
+          <div class="changelog-card">
+            <div class="timeline-node"></div>
+            <h3>Mobile Diffs</h3>
+            <span class="changelog-date">Nov 4, 2026</span>
+          </div>
 
-        <!-- Item 2 -->
-        <div class="changelog-card">
-          <div class="timeline-dot"></div>
-          <h3 class="changelog-headline">Slack and GitHub loop triggers</h3>
-          <p class="changelog-desc">Loops automate product work by responding to changes in Linear and connected tools.</p>
-          <span class="changelog-date">Oct 22, 2026</span>
-        </div>
+          <div class="changelog-card">
+            <div class="timeline-node" style="border-color:#9ca3af;"></div>
+            <h3>Slack and GitHub loop triggers</h3>
+            <p>Loops automate product work by responding to changes in Linear and connected tools. You can now trigger them from Slack and GitHub, share them as templates, and customize their reasoning levels.</p>
+            <span class="changelog-date">Oct 22, 2026</span>
+          </div>
 
-        <!-- Item 3 -->
-        <div class="changelog-card">
-          <div class="timeline-dot"></div>
-          <h3 class="changelog-headline">Stacked pull requests</h3>
-          <p class="changelog-desc">Stacked pull requests are now displayed in Linear Diffs. Move through changesets easily.</p>
-          <span class="changelog-date">Oct 8, 2026</span>
-        </div>
+          <div class="changelog-card">
+            <div class="timeline-node" style="border-color:#9ca3af;"></div>
+            <h3>Stacked pull requests</h3>
+            <p>Stacked pull requests are now displayed in Linear Diffs. Move through a stack and see review, CI, and merge status at a glance. Related PRs are grouped into a single collapsible row in Reviews, alongside their issue and project context.</p>
+            <span class="changelog-date">Oct 8, 2026</span>
+          </div>
 
-        <!-- Item 4 -->
-        <div class="changelog-card">
-          <div class="timeline-dot"></div>
-          <h3 class="changelog-headline">New controls for Linear coding agent</h3>
-          <p class="changelog-desc">Coding sessions are the shortest path from issue to diff. Assign a task to the agent with ease.</p>
-          <span class="changelog-date">Sep 24, 2026</span>
+          <div class="changelog-card">
+            <div class="timeline-node" style="border-color:#9ca3af;"></div>
+            <h3>New controls for Linear coding agent</h3>
+            <p>Coding sessions are the shortest path from issue to diff. Assign a task to Linear Agent, and it works in a secure cloud environment to write and test the code before opening a pull request for review.</p>
+            <span class="changelog-date">Sep 24, 2026</span>
+          </div>
         </div>
       </div>
 
-      <a href="#changelog" class="view-all-link">View all &rarr;</a>
+      <a href="#" class="changelog-view-all">View all &rarr;</a>
+    </div>
+  </section>
 
-      <!-- Customer Testimonials -->
-      <div class="quotes-grid">
-        <!-- OpenAI Quote Card -->
-        <div class="quote-card openai">
+  <!-- Testimonials Section (Image 4 bottom) -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="testimonials-grid">
+        <div class="quote-card quote-card-light">
           <div class="quote-text">
-            &ldquo;You'll probably build a better product, just because of the craft that using Linear infuses on your brain.&rdquo;
+            &ldquo;You&rsquo;ll probably build a better product, just because of the craft that using Linear infuses on your brain.&rdquo;
           </div>
           <div class="quote-author">
-            <div class="quote-avatar">GP</div>
-            <div class="author-info">
-              <span class="author-name">Gabriel Peal</span>
-              <span class="author-role">Staff Software Engineer, OpenAI</span>
+            <div class="author-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            </div>
+            <div>
+              <div class="author-name">Gabriel Peal</div>
+              <div class="author-role">Staff Software Engineer, OpenAI</div>
             </div>
           </div>
         </div>
 
-        <!-- Ramp Quote Card -->
-        <div class="quote-card ramp">
+        <div class="quote-card quote-card-neon">
           <div class="quote-text">
             &ldquo;Our speed is intense and Linear helps us be action biased.&rdquo;
           </div>
           <div class="quote-author">
-            <div class="quote-avatar">NK</div>
-            <div class="author-info">
-              <span class="author-name">Nik Koblov</span>
-              <span class="author-role">Head of Engineering, Ramp</span>
+            <div class="author-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="author-name">Nik Koblov</div>
+              <div class="author-role">Head of Engineering, Ramp</div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-eyebrow">Linear powers over 50,000 product teams. From ambitious startups to major enterprises.</div>
+      <h2 class="cta-title">Built for the future.<br>Available today.</h2>
+      <div class="cta-buttons">
+        <a href="#signup" class="btn-primary">Get started for free</a>
+        <a href="#contact" class="btn-secondary">Talk to sales</a>
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer>
-    <div class="container footer-content">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor">
-          <path d="M50 0 L100 50 L50 100 L0 50 Z" />
-        </svg>
-        <span>Linear &copy; 2026</span>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">
+            <svg viewBox="0 0 24 24">
+              <path d="M2.5 12c0-5.247 4.253-9.5 9.5-9.5s9.5 4.253 9.5 9.5-4.253 9.5-9.5 9.5S2.5 17.247 2.5 12zm2.08 3.535l9.955-9.955A7.42 7.42 0 0 0 12 4.58c-4.098 0-7.42 3.322-7.42 7.42 0 1.28.324 2.486.899 3.535zm1.53 1.53A7.375 7.375 0 0 0 12 19.42c4.098 0 7.42-3.322 7.42-7.42 0-1.28-.324-2.486-.9-3.535L6.11 17.065z"/>
+            </svg>
+            Linear
+          </div>
+          <p style="font-size:12.5px;color:var(--text-dim);line-height:1.5;">The system for modern software development and agent workflows.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Issues</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Roadmaps</a></li>
+            <li><a href="#">Linear Agent</a></li>
+            <li><a href="#">Diffs & Reviews</a></li>
+            <li><a href="#">Insights</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Features</h4>
+          <ul>
+            <li><a href="#">Slack & Loops</a></li>
+            <li><a href="#">GitHub integration</a></li>
+            <li><a href="#">Figma sync</a></li>
+            <li><a href="#">Customer requests</a></li>
+            <li><a href="#">Triage</a></li>
+            <li><a href="#">Mobile app</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API & Webhooks</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Status</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Customers</a></li>
+            <li><a href="#">Brand Assets</a></li>
+            <li><a href="#">Terms & Privacy</a></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <span>Crafted for high-performance product teams</span>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Linear Orbit, Inc. All rights reserved.</div>
+        <div style="display:flex;gap:20px;">
+          <a href="#">Twitter / X</a>
+          <a href="#">GitHub</a>
+          <a href="#">YouTube</a>
+        </div>
       </div>
     </div>
   </footer>
